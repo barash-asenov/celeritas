@@ -5,3 +5,6 @@
 
 **/tmp/
 **/vendor/
+
+# .env configuration
+**/.env
