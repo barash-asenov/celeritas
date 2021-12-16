@@ -102,7 +102,7 @@ func (c *Celeritas) Init(p initPaths) error {
 	return nil
 }
 
-// ListenAndServer starts the web server
+// ListenAndServe starts the web server
 func (c *Celeritas) ListenAndServe() {
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%s", os.Getenv("PORT")),

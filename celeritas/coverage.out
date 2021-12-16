@@ -1,0 +1,23 @@
+mode: set
+github.com/barash-asenov/celeritas/render/render.go:34.112,35.37 1 1
+github.com/barash-asenov/celeritas/render/render.go:44.2,44.52 1 1
+github.com/barash-asenov/celeritas/render/render.go:36.12,37.37 1 1
+github.com/barash-asenov/celeritas/render/render.go:38.13,39.49 1 1
+github.com/barash-asenov/celeritas/render/render.go:40.10,40.10 0 1
+github.com/barash-asenov/celeritas/render/render.go:48.103,51.16 2 1
+github.com/barash-asenov/celeritas/render/render.go:55.2,57.17 2 1
+github.com/barash-asenov/celeritas/render/render.go:61.2,63.16 2 1
+github.com/barash-asenov/celeritas/render/render.go:67.2,67.12 1 1
+github.com/barash-asenov/celeritas/render/render.go:51.16,53.3 1 1
+github.com/barash-asenov/celeritas/render/render.go:57.17,59.3 1 0
+github.com/barash-asenov/celeritas/render/render.go:63.16,65.3 1 0
+github.com/barash-asenov/celeritas/render/render.go:71.123,74.22 2 1
+github.com/barash-asenov/celeritas/render/render.go:80.2,82.17 2 1
+github.com/barash-asenov/celeritas/render/render.go:86.2,88.16 2 1
+github.com/barash-asenov/celeritas/render/render.go:94.2,94.47 1 1
+github.com/barash-asenov/celeritas/render/render.go:100.2,100.12 1 1
+github.com/barash-asenov/celeritas/render/render.go:74.22,76.3 1 1
+github.com/barash-asenov/celeritas/render/render.go:76.8,78.3 1 0
+github.com/barash-asenov/celeritas/render/render.go:82.17,84.3 1 0
+github.com/barash-asenov/celeritas/render/render.go:88.16,92.3 2 1
+github.com/barash-asenov/celeritas/render/render.go:94.47,98.3 2 0
