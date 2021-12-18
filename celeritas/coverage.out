@@ -1,4 +1,16 @@
 mode: set
+github.com/barash-asenov/celeritas/session/session.go:21.53,26.16 3 1
+github.com/barash-asenov/celeritas/session/session.go:31.2,31.48 1 1
+github.com/barash-asenov/celeritas/session/session.go:36.2,36.47 1 1
+github.com/barash-asenov/celeritas/session/session.go:41.2,50.40 8 1
+github.com/barash-asenov/celeritas/session/session.go:58.2,58.16 1 1
+github.com/barash-asenov/celeritas/session/session.go:26.16,28.3 1 0
+github.com/barash-asenov/celeritas/session/session.go:31.48,33.3 1 1
+github.com/barash-asenov/celeritas/session/session.go:36.47,38.3 1 0
+github.com/barash-asenov/celeritas/session/session.go:51.15,51.15 0 0
+github.com/barash-asenov/celeritas/session/session.go:52.26,52.26 0 0
+github.com/barash-asenov/celeritas/session/session.go:53.32,53.32 0 0
+github.com/barash-asenov/celeritas/session/session.go:54.10,54.10 0 1
 github.com/barash-asenov/celeritas/render/render.go:34.112,35.37 1 1
 github.com/barash-asenov/celeritas/render/render.go:44.2,44.52 1 1
 github.com/barash-asenov/celeritas/render/render.go:36.12,37.37 1 1

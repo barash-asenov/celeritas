@@ -8,3 +8,6 @@
 
 # .env configuration
 **/.env
+
+# persisted data
+**/db-data/
