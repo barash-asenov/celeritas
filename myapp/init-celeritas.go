@@ -38,5 +38,7 @@ func initApplication() *application {
 
 	app.Models = data.New(app.App.DB.Pool)
 
+	myHandlers.Models = app.Models
+
 	return app
 }
