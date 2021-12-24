@@ -8,5 +8,5 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	os.Exit(m.Run()))
+	os.Exit(m.Run())
 }
