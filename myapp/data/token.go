@@ -13,11 +13,11 @@ import (
 )
 
 type Token struct {
-	ID        int       `db:"id" json:"id"`
+	ID        int       `db:"id,omitempty" json:"id"`
 	UserID    int       `db:"user_id" json:"user_id"`
 	FirstName string    `db:"first_name" json:"first_name"`
 	Email     string    `db:"email" json:"email"`
-	PlainText string    `db:"-" json:"token"`
+	PlainText string    `db:"token" json:"token"`
 	Hash      []byte    `db:"token_hash" json:"-"`
 	CreatedAt time.Time `db:"created_at" json:"created_at"`
 	UpdatedAt time.Time `db:"updated_at" json:"updated_at"`
@@ -113,7 +113,7 @@ func (t *Token) Delete(id int) error {
 	return nil
 }
 
-func (t *Token) DeleteByToken(plainText int) error {
+func (t *Token) DeleteByToken(plainText string) error {
 	collection := upper.Collection(t.Table())
 
 	res := collection.Find(up.Cond{"token": plainText})
