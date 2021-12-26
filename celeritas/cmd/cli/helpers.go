@@ -60,6 +60,10 @@ func showHelp() {
 	help					- show the help commands
 	version 				- print application version
 	make migration <name>	- create two new up and down migrations in the migration folder 
+	make auth				- creates and runs migrations for authenticates tables, and creates models and middleware
+	make handler <name>		- creates a new stub handler in handlers directory
+	make model <name>		- creates a new stub model in data directory
+	make session 			- creates a table in the database as a session store
 	migrate					- runs all up migrations that have no been run previously
 	migrate down			- reverses the most recent migration
 	migrate reset 			- runs all down migrations in reverse order, and then all up migrations
