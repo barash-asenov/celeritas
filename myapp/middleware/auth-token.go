@@ -14,7 +14,7 @@ func (m *Middleware) authToken(next http.Handler) http.Handler {
 			payload.Error = true
 			payload.Message = "invalid authentication credentials"
 
-			_ = m.App.WriteJson(rw, http.StatusUnauthorized, payload)
+			_ = m.App.WriteJSON(rw, http.StatusUnauthorized, payload)
 		}
 	})
 }

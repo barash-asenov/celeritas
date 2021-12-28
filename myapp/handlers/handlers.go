@@ -49,3 +49,45 @@ func (h *Handlers) SessionTest(rw http.ResponseWriter, r *http.Request) {
 		h.App.ErrorLog.Println("error rendering:", err)
 	}
 }
+
+func (h *Handlers) JSON(rw http.ResponseWriter, r *http.Request) {
+	type Payload struct {
+		ID int64 `json:"id"`
+		Name string `json:"name"`
+		Hobbies []string `json:"hobbies"`
+	}
+
+	var payload Payload
+
+	payload.ID = 10
+	payload.Name = "Jack Jones"
+	payload.Hobbies = []string{"karate", "computer", "programming", "tennis", "gym"}
+
+	err := h.App.WriteJSON(rw, http.StatusOK, payload)
+	if err != nil {
+		h.App.ErrorLog.Println(err)
+	}
+}
+
+func (h *Handlers) XML(rw http.ResponseWriter, r *http.Request)  {
+	type Payload struct {
+		ID int64 `xml:"id"`
+		Name string `xml:"name"`
+		Hobbies []string `xml:"hobbies>hobby"`
+	}
+
+	var payload Payload
+
+	payload.ID = 10
+	payload.Name = "Jack Jones"
+	payload.Hobbies = []string{"karate", "computer", "programming", "tennis", "gym"}
+
+	err := h.App.WriteXML(rw, http.StatusOK, payload)
+	if err != nil {
+		h.App.ErrorLog.Println(err)
+	}
+}
+
+func (h *Handlers) DownloadFile(rw http.ResponseWriter, r *http.Request) {
+	h.App.DownloadFile(rw, r, "./public/images", "celeritas.jpg")
+}

@@ -10,6 +10,6 @@ func (a *application) post(s string, h http.HandlerFunc) {
 	a.App.Routes.Post(s, h)
 }
 
-func (a *application) use(m ...func(handler http.Handler) http.Handler)  {
+func (a *application) use(m ...func(http.Handler) http.Handler)  {
 	a.App.Routes.Use(m...)
 }
