@@ -3,12 +3,33 @@ package celeritas
 import (
 	"encoding/json"
 	"encoding/xml"
+	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"path"
 	"path/filepath"
 )
 
+func (c *Celeritas) ReadJSON(rw http.ResponseWriter, r *http.Request, data interface{}) error {
+	maxBytes := 1048576 // 1 mb
+	r.Body = http.MaxBytesReader(rw, r.Body, int64(maxBytes))
+
+	dec := json.NewDecoder(r.Body)
+	err := dec.Decode(data)
+	if err != nil {
+		return err
+	}
+
+	err = dec.Decode(&struct{}{})
+	if err != io.EOF {
+		return errors.New("body must only have a single json value")
+	}
+
+	return nil
+}
+
+// WriteJSON writes json from arbitrary data
 func (c *Celeritas) WriteJSON(rw http.ResponseWriter, status int, data interface{}, headers ...http.Header) error {
 	out, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
