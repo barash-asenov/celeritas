@@ -3,7 +3,9 @@ package celeritas
 import (
 	"fmt"
 	"github.com/barash-asenov/celeritas/cache"
+	"github.com/dgraph-io/badger/v3"
 	"github.com/gomodule/redigo/redis"
+	"github.com/robfig/cron/v3"
 	"log"
 	"net/http"
 	"os"
@@ -21,23 +23,27 @@ import (
 const version = "0.0.1"
 
 var myRedisCache *cache.RedisCache
+var myBadgerCache *cache.BadgerCache
+var redisPool *redis.Pool
+var badgerConn *badger.DB
 
 // Celeritas is the overall type for the Celeritas package. Members that are exported in this type
 // are available to any application that uses it.
 type Celeritas struct {
-	AppName       string
-	Debug         bool
-	Version       string
-	ErrorLog      *log.Logger
-	InfoLog       *log.Logger
-	RootPath      string
-	Routes        *chi.Mux
-	Render        *render.Render
-	Session       *scs.SessionManager
-	DB            Database
-	config        config
-	JetViews      *jet.Set
-	Cache         cache.Cache
+	AppName   string
+	Debug     bool
+	Version   string
+	ErrorLog  *log.Logger
+	InfoLog   *log.Logger
+	RootPath  string
+	Routes    *chi.Mux
+	Render    *render.Render
+	Session   *scs.SessionManager
+	DB        Database
+	config    config
+	JetViews  *jet.Set
+	Cache     cache.Cache
+	Scheduler *cron.Cron
 }
 
 type config struct {
@@ -95,9 +101,26 @@ func (c *Celeritas) New(rootPath string) error {
 		}
 	}
 
+	scheduler := cron.New()
+	c.Scheduler = scheduler
+
 	if os.Getenv("CACHE") == "redis" || os.Getenv("SESSION_TYPE") == "redis" {
 		myRedisCache = c.createClientRedisCache()
 		c.Cache = myRedisCache
+		redisPool = myRedisCache.Conn
+	}
+
+	if os.Getenv("CACHE") == "badger" {
+		myBadgerCache = c.createClientBadgerCache()
+		c.Cache = myBadgerCache
+		badgerConn = myBadgerCache.Conn
+
+		_, err = c.Scheduler.AddFunc("@daily", func() {
+			_ = myBadgerCache.Conn.RunValueLogGC(0.7)
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	c.Debug, _ = strconv.ParseBool(os.Getenv("DEBUG"))
@@ -191,7 +214,17 @@ func (c *Celeritas) ListenAndServe() {
 		WriteTimeout: 600 * time.Second,
 	}
 
-	defer c.DB.Pool.Close()
+	if c.DB.Pool != nil {
+		defer c.DB.Pool.Close()
+	}
+
+	if redisPool != nil {
+		defer redisPool.Close()
+	}
+
+	if badgerConn != nil {
+		defer badgerConn.Close()
+	}
 
 	c.InfoLog.Printf("Listening on port %s", os.Getenv("PORT"))
 	err := srv.ListenAndServe()
@@ -239,6 +272,14 @@ func (c *Celeritas) createClientRedisCache() *cache.RedisCache {
 	return &cacheClient
 }
 
+func (c *Celeritas) createClientBadgerCache() *cache.BadgerCache {
+	cacheClient := cache.BadgerCache{
+		Conn: c.createBadgerConn(),
+	}
+
+	return &cacheClient
+}
+
 func (c *Celeritas) createRedisPool() *redis.Pool {
 	return &redis.Pool{
 		MaxIdle:     50,
@@ -253,6 +294,15 @@ func (c *Celeritas) createRedisPool() *redis.Pool {
 			return err
 		},
 	}
+}
+
+func (c *Celeritas) createBadgerConn() *badger.DB {
+	db, err := badger.Open(badger.DefaultOptions(c.RootPath + "/tmp/badger"))
+	if err != nil {
+		return nil
+	}
+
+	return db
 }
 
 // BuildDSN builds the data source name for our database, and returns it as string
