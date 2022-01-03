@@ -48,7 +48,7 @@ func (h *Handlers) PostUserLogin(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	// did the user check rememberMe?
-	if r.Form.Get("remember") == "remember" {
+	if r.Form.Get("remember") == "on" {
 		randomString := h.randomString(12)
 		hasher := sha256.New()
 		_, err := hasher.Write([]byte(randomString))
