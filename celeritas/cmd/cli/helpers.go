@@ -64,6 +64,7 @@ func showHelp() {
 	make handler <name>		- creates a new stub handler in handlers directory
 	make model <name>		- creates a new stub model in data directory
 	make session 			- creates a table in the database as a session store
+	make mail <name>		- creates two starter templates in the mail directory
 	migrate					- runs all up migrations that have no been run previously
 	migrate down			- reverses the most recent migration
 	migrate reset 			- runs all down migrations in reverse order, and then all up migrations
