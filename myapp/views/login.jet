@@ -13,22 +13,27 @@ Login
 <hr>
 
 <form method="post" action="/users/login"
-    name="login-form" id="login-form"
-    class="d-block needs-validation"
-    autcomplete="off" novalidate="">
+      name="login-form" id="login-form"
+      class="d-block needs-validation"
+      autcomplete="off" novalidate="">
 
     <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input type="email" class="form-control" id="email" name="email"
-            required="" autcomplete="email-new">
+               required="" autcomplete="email-new">
     </div>
 
     <div class="mb-3">
         <label for="password" class="form-label">Password</label>
         <input type="password" class="form-control" id="password" name="password"
-            required="" autcomplete="password-new">
+               required="" autcomplete="password-new">
+    </div>
+
+    <div class="form-check form-switch">
+        <label class="form-check-label" for="remember">Remember Me</label>
+        <input type="checkbox" id="remember" name="remember" class="form-check-input">
     </div>
 
     <hr>
@@ -50,18 +55,18 @@ Login
 
 {{block js()}}
 <script>
-function val() {
+    function val() {
 
-    let form = document.getElementById("login-form");
-    if (form.checkValidity() === false){
-        this.event.preventDefault();
-        this.event.stopPropagation();
+        let form = document.getElementById("login-form");
+        if (form.checkValidity() === false) {
+            this.event.preventDefault();
+            this.event.stopPropagation();
+            form.classList.add("was-validated");
+            return;
+        }
+
         form.classList.add("was-validated");
-        return;
+        form.submit();
     }
-
-    form.classList.add("was-validated");
-    form.submit();
-}
 </script>
 {{end}}
