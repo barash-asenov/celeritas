@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/CloudyKit/jet/v6"
@@ -31,21 +32,30 @@ var badgerConn *badger.DB
 // Celeritas is the overall type for the Celeritas package. Members that are exported in this type
 // are available to any application that uses it.
 type Celeritas struct {
-	AppName   string
-	Debug     bool
-	Version   string
-	ErrorLog  *log.Logger
-	InfoLog   *log.Logger
-	RootPath  string
-	Routes    *chi.Mux
-	Render    *render.Render
-	Session   *scs.SessionManager
-	DB        Database
-	config    config
-	JetViews  *jet.Set
-	Cache     cache.Cache
-	Scheduler *cron.Cron
-	Mail      mailer.Mail
+	AppName       string
+	Debug         bool
+	Version       string
+	ErrorLog      *log.Logger
+	InfoLog       *log.Logger
+	RootPath      string
+	Routes        *chi.Mux
+	Render        *render.Render
+	Session       *scs.SessionManager
+	DB            Database
+	config        config
+	JetViews      *jet.Set
+	Cache         cache.Cache
+	Scheduler     *cron.Cron
+	Mail          mailer.Mail
+	EncryptionKey string
+	Server        Server
+}
+
+type Server struct {
+	ServerName string
+	Port       string
+	Secure     bool
+	URL        string
 }
 
 type config struct {
@@ -128,6 +138,7 @@ func (c *Celeritas) New(rootPath string) error {
 	c.Debug, _ = strconv.ParseBool(os.Getenv("DEBUG"))
 	c.Version = version
 	c.RootPath = rootPath
+	c.EncryptionKey = os.Getenv("KEY")
 	c.Mail = c.createMailer()
 	c.Routes = c.routes().(*chi.Mux)
 
@@ -151,6 +162,17 @@ func (c *Celeritas) New(rootPath string) error {
 			password: os.Getenv("REDIS_PASSWORD"),
 			prefix:   os.Getenv("REDIS_PREFIX"),
 		},
+	}
+
+	secure := true
+	if strings.ToLower(os.Getenv("SECURE")) == "false" {
+		secure = false
+	}
+	c.Server = Server{
+		ServerName: os.Getenv("SERVER_NAME"),
+		Port:       os.Getenv("PORT"),
+		Secure:     secure,
+		URL:        os.Getenv("APP_URL"),
 	}
 
 	// create session
@@ -270,20 +292,20 @@ func (c *Celeritas) createRenderer() {
 func (c *Celeritas) createMailer() mailer.Mail {
 	port, _ := strconv.Atoi(os.Getenv("SMTP_PORT"))
 	m := mailer.Mail{
-		Domain: os.Getenv("MAIL_DOMAIN"),
-		Templates: c.RootPath + "/mail",
-		Host: os.Getenv("SMTP_HOST"),
-		Port: port,
-		Username: os.Getenv("SMTP_USERNAME"),
-		Password: os.Getenv("SMTP_PASSWORD"),
-		Encryption: os.Getenv("SMTP_ENCRYPTION"),
-		FromName: os.Getenv("SMTP_FROM_NAME"),
+		Domain:      os.Getenv("MAIL_DOMAIN"),
+		Templates:   c.RootPath + "/mail",
+		Host:        os.Getenv("SMTP_HOST"),
+		Port:        port,
+		Username:    os.Getenv("SMTP_USERNAME"),
+		Password:    os.Getenv("SMTP_PASSWORD"),
+		Encryption:  os.Getenv("SMTP_ENCRYPTION"),
+		FromName:    os.Getenv("SMTP_FROM_NAME"),
 		FromAddress: os.Getenv("SMTP_FROM_ADDRESS"),
-		Jobs: make(chan mailer.Message, 20),
-		Results: make(chan mailer.Result, 20),
-		API: os.Getenv("MAILER_API"),
-		APIKey: os.Getenv("MAILER_KEY"),
-		APIUrl: os.Getenv("MAILER_URL"),
+		Jobs:        make(chan mailer.Message, 20),
+		Results:     make(chan mailer.Result, 20),
+		API:         os.Getenv("MAILER_API"),
+		APIKey:      os.Getenv("MAILER_KEY"),
+		APIUrl:      os.Getenv("MAILER_URL"),
 	}
 
 	return m
