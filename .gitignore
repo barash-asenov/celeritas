@@ -1,6 +1,7 @@
 # ide configuration folders
 .idea/
 .vscode/
+dist/
 
 tmp/
 vendor/
@@ -12,5 +13,4 @@ coverage.out
 
 # persisted data
 db-data/
-cache/
-dist/
+cache/testdata

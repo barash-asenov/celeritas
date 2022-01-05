@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"github.com/fatih/color"
 	"github.com/go-git/go-git/v5"
-	"io"
 	"log"
 	"os"
 	"os/exec"
-	"runtime"
 	"strings"
 )
 
@@ -58,45 +56,7 @@ func doNew(appName string) {
 		exitGracefully(err)
 	}
 
-	// create a makefile
-	if runtime.GOOS == "windows" {
-		source, err := os.Open(fmt.Sprintf("./%s/Makefile.windows", appName))
-		if err != nil {
-			exitGracefully(err)
-		}
-		defer source.Close()
-
-		destination, err := os.Create(fmt.Sprintf("./%s/Makefile", appName))
-		if err != nil {
-			exitGracefully(err)
-		}
-		defer destination.Close()
-
-		_, err = io.Copy(destination, source)
-		if err != nil {
-			exitGracefully(err)
-		}
-	} else {
-		source, err := os.Open(fmt.Sprintf("./%s/Makefile", appName))
-		if err != nil {
-			exitGracefully(err)
-		}
-		defer source.Close()
-
-		destination, err := os.Create(fmt.Sprintf("./%s/Makefile", appName))
-		if err != nil {
-			exitGracefully(err)
-		}
-		defer destination.Close()
-
-		_, err = io.Copy(destination, source)
-		if err != nil {
-			exitGracefully(err)
-		}
-	}
-
-	_ = os.Remove("./" + appName + "./Makefile")
-	_ = os.Remove("./" + appName + "./Makefile.windows")
+	// create a makefile @NOTE: supporting only linux, so this part is redundant
 
 	// update go.mod file
 	color.Yellow("\tCreating go.mod file...")
