@@ -1,15 +1,16 @@
 # ide configuration folders
-**/.idea/
-**/.vscode/
+.idea/
+.vscode/
 
+tmp/
+vendor/
+coverage.out
 
-**/tmp/
-**/vendor/
 
 # .env configuration
-**/.env
+.env
 
 # persisted data
-**/db-data/
-**/cache/
-**/dist/
+db-data/
+cache/
+dist/
