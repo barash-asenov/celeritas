@@ -30,6 +30,13 @@ celeritas-cli new my-awesome-app
 
 This will create the skeleton celeritas app that you can start work with
 
+Then basically make sure port 4000 free and use
+```shell
+make start
+```
+
+and fire up the web server
+
 ### Prerequisites
 
 Go installed on machine.
